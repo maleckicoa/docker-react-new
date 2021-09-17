@@ -1,0 +1,23 @@
+sudo: required
+language: generic
+
+services:
+  - docker
+
+before_install:
+  - docker build -t maleckicoa/docker-react-new -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true maleckicoa/docker-react-new npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: 'eu-central-1'
+  app: 'docker-react-new'
+  env: 'dockerreactnew-env'
+  bucket_name: 'elasticbeanstalk-eu-central-1-026803142645'
+  bucket_path: 'docker-react-new'
+  on:
+    branch: main
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
